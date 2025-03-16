@@ -28,16 +28,17 @@ class Place(models.Model):
 
 class Image(models.Model):
     '''Модель для хранения изображений'''
-    img_id = models.PositiveIntegerField(editable=True, verbose_name='Номер изображения', default=1)
+    image = models.ImageField(verbose_name='Изображение', null=True, blank=True)   
     location = models.ForeignKey(Place, on_delete=models.CASCADE, related_name='images', verbose_name='Локация', null=True, blank=True)
+    img_id = models.PositiveIntegerField(editable=True, verbose_name='Номер изображения', default=1)
     img_description = models.CharField(max_length=30, verbose_name='Описание изображения', blank=True)
-    image = models.ImageField(verbose_name='Файл изображения', null=True, blank=True)       
-    
+        
+        
     class Meta:
         unique_together = ('location', 'img_id')
         ordering = ['location__place_name', 'img_id']
             
     def __str__(self):
-        return f'{self.img_id}'
+        return f'{self.location}'
 
     
