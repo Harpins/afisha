@@ -9,6 +9,6 @@ class PlaceAdmin(admin.ModelAdmin):
     
 @admin.register(Image)
 class ImageAdmin(admin.ModelAdmin):
-    list_display = ['img_description', 'image']
-    list_filter = ['location__place_name']
-    search_fields = ['img_description', 'location__place_name']
+    list_display = ['location', 'img_id', 'img_description', 'image']
+    list_filter = ['location']
+    search_fields = ['img_description', 'location']
