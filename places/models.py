@@ -10,6 +10,9 @@ class Place(models.Model):
     description_short = models.TextField(max_length=300, verbose_name='Короткое описание', blank=True, default='')
     description_long = models.TextField(max_length=5000, verbose_name='Длинное описание', blank=True, default='')
     
+    class Meta:
+        ordering = ['place_id']
+    
     def __str__(self):
         return self.place_name
     
@@ -24,21 +27,20 @@ class Place(models.Model):
                     "detailsUrl": f'places/{self.place_id}',
                 }
             }
-            
+        
 
 class Image(models.Model):
     '''Модель для хранения изображений'''
     image = models.ImageField(verbose_name='Изображение', null=True, blank=True)   
     location = models.ForeignKey(Place, on_delete=models.CASCADE, related_name='images', verbose_name='Локация', null=True, blank=True)
-    img_id = models.PositiveIntegerField(editable=True, verbose_name='Номер изображения', default=1)
+    img_id = models.PositiveIntegerField(editable=True, verbose_name='Номер изображения', default=0, blank=False, null=False)
     img_description = models.CharField(max_length=30, verbose_name='Описание изображения', blank=True)
         
         
     class Meta:
-        unique_together = ('location', 'img_id')
-        ordering = ['location__place_name', 'img_id']
+        ordering = ['img_id', 'location__place_name']
             
     def __str__(self):
-        return f'{self.location}'
+        return f'{self.pk} {self.location}'
 
     
