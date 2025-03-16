@@ -1,17 +1,14 @@
-from django.db import models
-
-
-    
-        
+from django.db import models       
     
 
 class Place(models.Model):
     '''Модель для хранения локаций'''
     place_name = models.CharField(max_length=255, verbose_name='Название локации')
     place_id = models.CharField(max_length=255, verbose_name='ID локации', unique=True)
-    details_url = models.URLField(max_length=255, verbose_name='Ссылка на описание', blank=True, null=True)
     latitude = models.DecimalField(verbose_name='Широта', decimal_places=14, max_digits=17, default=-90.0)
     longtitude = models.DecimalField(verbose_name='Долгота', decimal_places=14, max_digits=18, default=-180.0)
+    description_short = models.CharField(max_length=300, verbose_name='Короткое описание', blank=True, default='')
+    description_long = models.CharField(max_length=2000, verbose_name='Длинное описание', blank=True, default='')
     
     def __str__(self):
         return self.place_name
@@ -23,10 +20,10 @@ class Place(models.Model):
                 "properties": {
                     "title": self.place_name,
                     "placeId": self.place_id,
-                    "detailsUrl": self.details_url,
+                    "detailsUrl": '',
                 }
             }
-        
+            
 
 class Image(models.Model):
     '''Модель для хранения изображений'''
