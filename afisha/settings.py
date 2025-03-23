@@ -19,7 +19,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DEBUG')
 
-ALLOWED_HOSTS = ["127.0.0.1", ".pythonanywhere.com"]
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', [])
 
 
 # Application definition
@@ -130,9 +130,3 @@ TINYMCE_DEFAULT_CONFIG = {
     'width': '100%',
     'height': 300
 }
-
-
-if DEBUG:
-    import mimetypes
-
-    mimetypes.add_type("image/png", ".png", True)
