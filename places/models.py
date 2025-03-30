@@ -35,7 +35,7 @@ class Image(models.Model):
     image = models.ImageField(verbose_name='Изображение', null=True, blank=True)   
     location = models.ForeignKey(Place, on_delete=models.CASCADE, related_name='images', verbose_name='Локация', null=True, blank=True)
     img_id = models.PositiveIntegerField(editable=True, verbose_name='Номер изображения', default=0, blank=False, null=False)
-    img_description = models.CharField(max_length=100, verbose_name='Описание изображения', blank=True, default='')
+    description = models.CharField(max_length=100, verbose_name='Описание изображения', blank=True, default='')
         
         
     class Meta:
