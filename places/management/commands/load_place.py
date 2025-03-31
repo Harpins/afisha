@@ -45,8 +45,6 @@ class Command(BaseCommand):
             self.stdout.write(self.style.SUCCESS(f"{location}: добавлено {len(downloaded_images)} изображений"))
         if updated_images:
             self.stdout.write(self.style.WARNING(f"{location}: обновлено {len(updated_images)} изображений")) 
-        if not (downloaded_images and updated_images):
-            self.stdout.write(self.style.ERROR(f"{location}: изображения не были загружены")) 
 
     def get_place_id(self, place_name):
         cleaned_id = re.sub(r"[^a-zA-Zа-яА-Я0-9]", "", place_name)
