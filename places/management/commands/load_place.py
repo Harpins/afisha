@@ -46,6 +46,7 @@ class Command(BaseCommand):
         if updated_images:
             self.stdout.write(self.style.WARNING(f"{location}: обновлено {len(updated_images)} изображений")) 
 
+
     def get_place_id(self, place_name):
         cleaned_id = re.sub(r"[^a-zA-Zа-яА-Я0-9]", "", place_name)
         return translit(cleaned_id, "ru", reversed=True)
