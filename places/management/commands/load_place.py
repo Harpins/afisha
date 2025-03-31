@@ -21,42 +21,32 @@ class Command(BaseCommand):
             help="Название папки с json-файлами",
             default="json_data",
         )
-        parser.add_argument(
-            "--json_images",
-            type=str,
-            help="Название папки для изображений из json-файлов",
-            default="images_data",
-        )
-
-    def download_images(self, img_urls, img_folder, place_id):
+        
+    def download_images(self, img_urls, place_id):
         location = get_object_or_404(Place, place_id=place_id)
         downloaded_images = []
+        updated_images = []
         for idx, img_url in enumerate(img_urls, start=1):
             response = requests.get(img_url, timeout=10)
             img_name = Path(img_url).name
-            img_path = img_folder / img_name
             response.raise_for_status()
             content = ContentFile(response.content, name=img_name)
-            with open(img_path, "wb") as jf:
-                jf.write(response.content)
             image, created = Image.objects.get_or_create(
                 location=location,
                 img_id=idx,
                 defaults={"description": img_url, "image": content},
             )
-            downloaded_images.append(img_path)
+            
             if created:
-                self.stdout.write(
-                    self.style.SUCCESS(
-                        f"Добавлено изображение {idx} для {location.place_name}"
-                    )
-                )
+                downloaded_images.append(img_name)
             else:
-                self.stdout.write(
-                    self.style.WARNING(
-                        f"Обновлено изображение {idx} для {location.place_name}"
-                    )
-                )
+                updated_images.append(img_name)
+        if downloaded_images:        
+            self.stdout.write(self.style.SUCCESS(f"{location.name}: добавлено {len(downloaded_images)} изображений"))
+        if updated_images:
+            self.stdout.write(self.style.WARNING(f"{location.name}: обновлено {len(updated_images)} изображений")) 
+        if not (downloaded_images and updated_images):
+            self.stdout.write(self.style.ERROR(f"{location.name}: изображения не были загружены")) 
 
     def get_place_id(self, place_name):
         cleaned_id = re.sub(r"[^a-zA-Zа-яА-Я0-9]", "", place_name)
@@ -71,8 +61,6 @@ class Command(BaseCommand):
                         self.style.ERROR(f"Папка {json_folder} не обнаружена")
                     )
                     raise FileNotFoundError(f"Папка {json_folder} не обнаружена")
-                img_folder = Path(settings.BASE_DIR / options["json_images"])
-                img_folder.mkdir(parents=True, exist_ok=True)
 
                 for json_file in json_folder.glob("*.json"):
                     with open(json_file, "r", encoding="utf-8") as jf:
@@ -93,7 +81,7 @@ class Command(BaseCommand):
                                 "description_long": description_long,
                             },
                         )
-                        self.download_images(img_urls, img_folder, place_id)
+                        self.download_images(img_urls, place_id)
                         if created:
                             self.stdout.write(
                                 self.style.SUCCESS(f"Добавлена локация: {location}")
