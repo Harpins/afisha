@@ -66,4 +66,4 @@ class Image(models.Model):
         unique_together = ["location", "ordinal"]
 
     def __str__(self):
-        return f"{self.pk} {self.location}"
+        return f"{self.ordinal} {self.location}"
