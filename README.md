@@ -10,8 +10,9 @@
 - Скачайте код
 - Установите зависимости командой `pip install -r requirements.txt`
 - Создайте файл базы данных и сразу примените все миграции командой `python manage.py migrate`
+- Соберите всю статику командой `python manage.py collectstatic`
 - Настройте учетную запись администратора командой `python manage.py createsuperuser`
-- Запустите сервер командой `python manage.py runserver`
+- Запустите сервер командой `python manage.py runserver` (`python manage.py runserver --insecure` если `DEBUG=False`)
 
 ## Добавление новых локаций
 
@@ -61,7 +62,7 @@
 Часть настроек проекта берётся из переменных окружения. Чтобы их определить, создайте файл `.env` рядом с `manage.py` и запишите туда данные в таком формате: `ПЕРЕМЕННАЯ=значение`.
 
 Доступны 5 переменных:
-- `DEBUG` — дебаг-режим. Поставьте True, чтобы увидеть отладочную информацию в случае ошибки.
+- `DEBUG` — дебаг-режим. Дефолтное значение - <span style="color:blue">False'</span>
 - `SECRET_KEY` — секретный ключ проекта
 - `ALLOWED_HOSTS` — см [документацию Django](https://docs.djangoproject.com/en/3.1/ref/settings/#allowed-hosts).
 - `REPO_ID` — ссылка на репозиторий в формате `github_account/repository_name`

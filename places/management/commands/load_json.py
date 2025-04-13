@@ -10,7 +10,7 @@ env = Env()
 env.read_env()
 
 class Command(BaseCommand):
-    help = "Скачивает json-файлы и изображения к ним по ссылке на репозиторий"
+    help = "Скачивает json-файлы по ссылке на репозиторий"
 
     def add_arguments(self, parser):
         parser.add_argument(
