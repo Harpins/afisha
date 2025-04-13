@@ -133,29 +133,7 @@
     });
     map.addControl(sidebar);
 
-    // FIXME should be hidden in production mode
-    L.control.custom({
-      position: 'bottomleft',
-      content: `
-        <label>
-            <input name="debug" type="checkbox" ${log.getLevel()<=1 && 'checked'}/>
-            Отладка
-        </label>`,
-      style: {
-        padding: '10px',
-        background: 'rgba(255, 255, 255, 0.7)',
-      },
-      events: {
-        click: event => {
-          if (event.target.name == 'debug'){
-            let level = event.target.checked && 'debug' || 'warn';
-            log.setLevel(level);
-            console.log(`Set log level: ${level}`)
-          }
-        },
-      }
-    }).addTo(map);
-
+    
     function loadJSON(elementId){
       let element = document.getElementById(elementId);
 
@@ -210,12 +188,7 @@
       template: document.getElementById('app-template').innerHTML,
       data: {
         loadingPlaceId: null,
-        selectedPlace: null,  // object with attributes specified below
-          // title
-          // placeId
-          // imgs
-          // short_description
-          // long_description
+        selectedPlace: null,  
       },
       computed: {
         promptVisible: function () {
@@ -239,14 +212,11 @@
       },
       updated: function () {
         this.$nextTick(function () {
-          // Код, будет запущен только после обновления всех представлений
           $('#place-photos').carousel();
         })
       },
       methods: {
         handlePhotosClick: function(slideId='next') {
-          // default event handlers of Bootstrap Carousel conflict with Leaflet
-          // so custom handler will mimic expected carousel behaviour
           $('#place-photos').carousel(slideId);
         }
       },
@@ -271,7 +241,6 @@
         let data = await response.json();
 
         if (sidebarApp.loadingPlaceId != placeId){
-          // Place loading was cancelled by user
           return
         }
 

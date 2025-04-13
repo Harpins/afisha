@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from tinymce.models import HTMLField
 
 
@@ -6,25 +7,23 @@ class Place(models.Model):
     """Модель для хранения локаций"""
 
     place_name = models.CharField(max_length=255, verbose_name="Название локации")
-    place_id = models.CharField(max_length=255, verbose_name="ID локации", unique=True)
     latitude = models.DecimalField(
-        verbose_name="Широта", decimal_places=14, max_digits=17, default=-90.0
+        verbose_name="Широта", decimal_places=14, max_digits=17
     )
     longtitude = models.DecimalField(
-        verbose_name="Долгота", decimal_places=14, max_digits=18, default=-180.0
+        verbose_name="Долгота", decimal_places=14, max_digits=18
     )
-    description_short = models.CharField(
-        max_length=500, verbose_name="Короткое описание", blank=True, default=""
-    )
-    description_long = HTMLField(
-        max_length=5000, verbose_name="Длинное описание", blank=True, default=""
-    )
+    short_description = HTMLField(verbose_name="Короткое описание", blank=True)
+    long_description = HTMLField(verbose_name="Длинное описание", blank=True)
 
     class Meta:
-        ordering = ["place_id"]
+        ordering = ["place_name"]
 
     def __str__(self):
         return self.place_name
+
+    def get_absolute_url(self):
+        return reverse("place_name", kwargs={"pk": self.pk})
 
     def get_features(self):
         return {
@@ -35,8 +34,8 @@ class Place(models.Model):
             },
             "properties": {
                 "title": self.place_name,
-                "placeId": self.place_id,
-                "detailsUrl": f"places/{self.place_id}",
+                "placeId": self.pk,
+                "detailsUrl": self.get_absolute_url(),
             },
         }
 
@@ -44,7 +43,9 @@ class Place(models.Model):
 class Image(models.Model):
     """Модель для хранения изображений"""
 
-    image = models.ImageField(verbose_name="Изображение", null=True, blank=True, upload_to='images/')
+    image = models.ImageField(
+        verbose_name="Изображение", upload_to="images/", default=None
+    )
     location = models.ForeignKey(
         Place,
         on_delete=models.CASCADE,
@@ -53,19 +54,16 @@ class Image(models.Model):
         null=True,
         blank=True,
     )
-    img_id = models.PositiveIntegerField(
-        editable=True,
-        verbose_name="Номер изображения",
-        default=0,
-        blank=False,
-        null=False,
+    ordinal = models.PositiveIntegerField(
+        verbose_name="Порядковый номер", db_index=True, default=1
     )
     description = models.CharField(
-        max_length=255, verbose_name="Описание изображения", blank=True, default=""
+        max_length=255, verbose_name="Описание изображения", blank=True
     )
 
     class Meta:
-        ordering = ["img_id", "location__place_name"]
+        ordering = ["ordinal", "location__place_name"]
+        unique_together = ["location", "ordinal"]
 
     def __str__(self):
         return f"{self.pk} {self.location}"

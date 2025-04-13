@@ -1,13 +1,15 @@
+from pathlib import Path
+from urllib.parse import urljoin
+
+import requests
+from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.db import transaction
-from pathlib import Path
-from django.conf import settings
 from environs import Env
-import requests
-from urllib.parse import urljoin
 
 env = Env()
 env.read_env()
+
 
 class Command(BaseCommand):
     help = "Скачивает json-файлы по ссылке на репозиторий"

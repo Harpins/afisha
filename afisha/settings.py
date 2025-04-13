@@ -1,28 +1,22 @@
 import os
-from environs import Env
 from pathlib import Path
 
-env = Env() 
+from environs import Env
+
+env = Env()
 env.read_env()
 
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('SECRET_KEY')
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool('DEBUG', False)
-
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', [])
+SECRET_KEY = env("SECRET_KEY")
 
 
-# Application definition
+DEBUG = env.bool("DEBUG", False)
+
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", [])
+
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -67,9 +61,6 @@ TEMPLATES = [
 WSGI_APPLICATION = "afisha.wsgi.application"
 
 
-# Database
-# https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -77,9 +68,6 @@ DATABASES = {
     }
 }
 
-
-# Password validation
-# https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -97,9 +85,6 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# Internationalization
-# https://docs.djangoproject.com/en/4.0/topics/i18n/
-
 LANGUAGE_CODE = "ru-ru"
 
 TIME_ZONE = "Europe/Moscow"
@@ -108,27 +93,14 @@ USE_I18N = True
 
 USE_TZ = True
 
+STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.0/howto/static-files/
-
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
-]
-
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
-
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_URL = "/media/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
-TINYMCE_DEFAULT_CONFIG = {
-    'width': '100%',
-    'height': 300
-}
+TINYMCE_DEFAULT_CONFIG = {"width": "100%", "height": 300}

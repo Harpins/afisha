@@ -1,14 +1,14 @@
-from django.core.management.base import BaseCommand
 import json
-from django.db import transaction
-from django.core.files.base import ContentFile
 from pathlib import Path
-from django.conf import settings
-from places.models import Place, Image
+
 import requests
-import re
-from transliterate import translit
+from django.conf import settings
+from django.core.files.base import ContentFile
+from django.core.management.base import BaseCommand
+from django.db import transaction
 from django.shortcuts import get_object_or_404
+
+from places.models import Image, Place
 
 
 class Command(BaseCommand):
@@ -21,9 +21,9 @@ class Command(BaseCommand):
             help="Название папки с json-файлами",
             default="json_data",
         )
-        
+
     def download_images(self, img_urls, place_id):
-        location = get_object_or_404(Place, place_id=place_id)
+        location = get_object_or_404(Place, id=place_id)
         downloaded_images = []
         updated_images = []
         for idx, img_url in enumerate(img_urls, start=1):
@@ -33,23 +33,26 @@ class Command(BaseCommand):
             content = ContentFile(response.content, name=img_name)
             image, created = Image.objects.get_or_create(
                 location=location,
-                img_id=idx,
+                ordinal=idx,
                 defaults={"description": img_url, "image": content},
             )
-            
+
             if created:
                 downloaded_images.append(img_name)
             else:
                 updated_images.append(img_name)
-        if downloaded_images:        
-            self.stdout.write(self.style.SUCCESS(f"{location}: добавлено {len(downloaded_images)} изображений"))
+        if downloaded_images:
+            self.stdout.write(
+                self.style.SUCCESS(
+                    f"{location}: добавлено {len(downloaded_images)} изображений"
+                )
+            )
         if updated_images:
-            self.stdout.write(self.style.WARNING(f"{location}: обновлено {len(updated_images)} изображений")) 
-
-
-    def get_place_id(self, place_name):
-        cleaned_id = re.sub(r"[^a-zA-Zа-яА-Я0-9]", "", place_name)
-        return translit(cleaned_id, "ru", reversed=True)
+            self.stdout.write(
+                self.style.WARNING(
+                    f"{location}: обновлено {len(updated_images)} изображений"
+                )
+            )
 
     def handle(self, *args, **options):
         try:
@@ -65,29 +68,27 @@ class Command(BaseCommand):
                     with open(json_file, "r", encoding="utf-8") as jf:
                         json_data = json.load(jf)
                         place_name = json_data.get("title", "noname")
-                        place_id = self.get_place_id(place_name)
                         coordinates = json_data.get("coordinates", {})
-                        description_short = json_data.get("description_short", "")
-                        description_long = json_data.get("description_short", "")
+                        short_description = json_data.get("description_short", "")
+                        long_description = json_data.get("description_short", "")
                         img_urls = json_data.get("imgs", [])
-                        location, created = Place.objects.get_or_create(
-                            place_id=place_id,
+                        place, created = Place.objects.get_or_create(
+                            place_name=place_name,
                             defaults={
-                                "place_name": place_name,
                                 "latitude": coordinates.get("lat", "50"),
                                 "longtitude": coordinates.get("lng", "30"),
-                                "description_short": description_short,
-                                "description_long": description_long,
+                                "short_description": short_description,
+                                "long_description": long_description,
                             },
                         )
-                        self.download_images(img_urls, place_id)
+                        self.download_images(img_urls, place.id)
                         if created:
                             self.stdout.write(
-                                self.style.SUCCESS(f"Добавлена локация: {location}")
+                                self.style.SUCCESS(f"Добавлена локация: {place}")
                             )
                         else:
                             self.stdout.write(
-                                self.style.WARNING(f"Обновлена локация: {location}")
+                                self.style.WARNING(f"Обновлена локация: {place}")
                             )
 
         except Exception as e:
