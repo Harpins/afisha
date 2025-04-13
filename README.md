@@ -62,7 +62,7 @@
 Часть настроек проекта берётся из переменных окружения. Чтобы их определить, создайте файл `.env` рядом с `manage.py` и запишите туда данные в таком формате: `ПЕРЕМЕННАЯ=значение`.
 
 Доступны 5 переменных:
-- `DEBUG` — дебаг-режим. Дефолтное значение - <span style="color:blue">False'</span>
+- `DEBUG` — дебаг-режим. Дефолтное значение - `False`
 - `SECRET_KEY` — секретный ключ проекта
 - `ALLOWED_HOSTS` — см [документацию Django](https://docs.djangoproject.com/en/3.1/ref/settings/#allowed-hosts).
 - `REPO_ID` — ссылка на репозиторий в формате `github_account/repository_name`
