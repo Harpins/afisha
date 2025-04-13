@@ -70,7 +70,7 @@ class Command(BaseCommand):
                         place_name = json_data.get("title", "noname")
                         coordinates = json_data.get("coordinates", {})
                         short_description = json_data.get("description_short", "")
-                        long_description = json_data.get("description_short", "")
+                        long_description = json_data.get("description_long", "")
                         img_urls = json_data.get("imgs", [])
                         place, created = Place.objects.get_or_create(
                             place_name=place_name,
