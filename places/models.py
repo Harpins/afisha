@@ -44,15 +44,13 @@ class Image(models.Model):
     """Модель для хранения изображений"""
 
     image = models.ImageField(
-        verbose_name="Изображение", upload_to="images/", default=None
+        verbose_name="Изображение", upload_to="images/"
     )
     location = models.ForeignKey(
         Place,
         on_delete=models.CASCADE,
         related_name="images",
         verbose_name="Локация",
-        null=True,
-        blank=True,
     )
     ordinal = models.PositiveIntegerField(
         verbose_name="Порядковый номер", db_index=True, default=1
