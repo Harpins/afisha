@@ -18,11 +18,11 @@ def index(request):
 
 
 def place_details(request, pk):
-    place = get_object_or_404(Place, pk=pk)
+    place = get_object_or_404(Place.objects.prefetch_related("images"), pk=pk)
     place_images = [
         f"{settings.MEDIA_URL}{place_image.image}" for place_image in place.images.all()
     ]
-    place_json_data = {
+    place_data = {
         "title": place.place_name,
         "imgs": place_images,
         "description_short": place.short_description,
@@ -30,5 +30,5 @@ def place_details(request, pk):
         "coordinates": {"lng": str(place.latitude), "lat": str(place.longtitude)},
     }
     return HttpResponse(
-        json.dumps(place_json_data, ensure_ascii=False), content_type="application/json"
+        json.dumps(place_data, ensure_ascii=False), content_type="application/json"
     )

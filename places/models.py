@@ -43,9 +43,7 @@ class Place(models.Model):
 class Image(models.Model):
     """Модель для хранения изображений"""
 
-    image = models.ImageField(
-        verbose_name="Изображение", upload_to="images/"
-    )
+    image = models.ImageField(verbose_name="Изображение", upload_to="images/")
     location = models.ForeignKey(
         Place,
         on_delete=models.CASCADE,
