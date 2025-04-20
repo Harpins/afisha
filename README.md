@@ -49,6 +49,24 @@
 
 **Важно** - Перед запуском команды обязательно задайте переменные окружения `REPO_ID` и `JSON_DIR`
 
+Структура JSON-файла с данными о локации:
+```
+{
+    "title": "Название локации",
+    "imgs": [
+        "https://image1.jpg",
+        "https://image2.jpg",
+        "https://image3.jpg"
+    ],
+    "description_short": "Краткое описание локации",
+    "description_long": "Подробное описание локации",
+    "coordinates": {
+        "lng": "37.50169",
+        "lat": "55.816591"
+    }
+}
+```
+
 С примерами JSON-файлов можно ознакомиться по [ссылке](https://github.com/devmanorg/where-to-go-places/tree/master/places)
 
 `python manage.py load_place`
