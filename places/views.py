@@ -27,7 +27,7 @@ def place_details(request, pk):
         "imgs": place_images,
         "description_short": place.short_description,
         "description_long": place.long_description,
-        "coordinates": {"lng": str(place.latitude), "lat": str(place.longtitude)},
+        "coordinates": {"lng": str(place.latitude), "lat": str(place.longitude)},
     }
     return HttpResponse(
         json.dumps(place_data, ensure_ascii=False), content_type="application/json"

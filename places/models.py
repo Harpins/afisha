@@ -10,7 +10,7 @@ class Place(models.Model):
     latitude = models.DecimalField(
         verbose_name="Широта", decimal_places=14, max_digits=17
     )
-    longtitude = models.DecimalField(
+    longitude = models.DecimalField(
         verbose_name="Долгота", decimal_places=14, max_digits=18
     )
     short_description = HTMLField(verbose_name="Короткое описание", blank=True)
@@ -30,7 +30,7 @@ class Place(models.Model):
             "type": "Feature",
             "geometry": {
                 "type": "Point",
-                "coordinates": [float(self.longtitude), float(self.latitude)],
+                "coordinates": [float(self.longitude), float(self.latitude)],
             },
             "properties": {
                 "title": self.place_name,

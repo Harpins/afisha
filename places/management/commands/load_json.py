@@ -16,7 +16,7 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            "--json_data",
+            "folder",
             type=str,
             help="Путь к папке, в которую будут загружены JSON-файлы",
             default="json_data",
@@ -29,7 +29,7 @@ class Command(BaseCommand):
                 json_dir = env("JSON_DIR")
                 api_url = f"https://api.github.com/repos/{repo_id}/contents/{json_dir}"
                 raw_url = f"https://raw.githubusercontent.com/{repo_id}/master/"
-                json_folder = Path(settings.BASE_DIR / options["json_data"])
+                json_folder = Path(settings.BASE_DIR / options["folder"])
                 json_folder.mkdir(parents=True, exist_ok=True)
 
                 response = requests.get(api_url, timeout=10)
@@ -47,6 +47,7 @@ class Command(BaseCommand):
                             f"JSON-файлы не найдены в директории {json_dir} репозитория {repo_id}"
                         )
                     )
+                    return
 
                 for json_file in json_files:
                     file_url = urljoin(raw_url, f"{json_dir}/{json_file}")
