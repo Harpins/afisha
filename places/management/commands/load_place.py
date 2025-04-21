@@ -57,8 +57,6 @@ class Command(BaseCommand):
             "title",
             "imgs",
             "coordinates",
-            "description_short",
-            "description_long",
         ]
         return all(key in json_data for key in required_keys)
 
@@ -90,18 +88,19 @@ class Command(BaseCommand):
                     raise ValueError("Отсутствуют координаты")
 
                 lat, lng = coordinates.get("lat"), coordinates.get("lng")
+
                 try:
                     float_lat, float_lng = float(lat), float(lng)
                     if abs(float_lat) > 90:
                         raise ValueError(
                             "Абсолютное значение широты превышает 90 град."
                         )
-                    elif abs(float_lng) > 180:
+                    if abs(float_lng) > 180:
                         raise ValueError(
                             "Абсолютное значение долготы превышает 180 град."
                         )
-                except ValueError as err:
-                    raise err("Координаты заданы некорректно")
+                except (TypeError, ValueError) as err:
+                    raise ValueError("Координаты заданы некорректно") from err
 
                 img_urls = json_data.get("imgs", [])
                 if not img_urls:
