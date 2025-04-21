@@ -75,7 +75,7 @@ JSON-ответ сервера должен содержать данные сл
 
 С примерами JSON-файлов можно ознакомиться по [ссылке](https://github.com/devmanorg/where-to-go-places/tree/master/places)
 
-###`python manage.py load_json`
+### `python manage.py load_json`
 Загружает набор json файлов из репозитория на GitHub.
 
 Аргументы:
@@ -83,7 +83,7 @@ JSON-ответ сервера должен содержать данные сл
 
 **Важно!** - Перед запуском команды обязательно задайте переменные окружения `REPO_ID` и `JSON_DIR`
 
-###`python manage.py load_folder`
+### `python manage.py load_folder`
 Парсит загруженные json-файлы и заполняет БД на их основе.
 Аргументы:
 - "json_folder" : Путь к папке, в которую загружены json-файлы, default="json_data"
