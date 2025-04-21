@@ -96,9 +96,8 @@ JSON-ответ сервера должен содержать данные сл
 - `DEBUG` — дебаг-режим. Дефолтное значение - `False`
 - `SECRET_KEY` — секретный ключ проекта
 - `ALLOWED_HOSTS` — см. [документацию Django](https://docs.djangoproject.com/en/3.1/ref/settings/#allowed-hosts).
-- `REPO_ID` — ссылка на репозиторий в формате `github_account/repository_name` (см. `python manage.py load_json`)
-- `JSON_DIR` — путь к директории с json-файлами для наполнения БД (см. `python manage.py load_json`)
-
+- `REPO_ID` — ссылка на репозиторий в формате `github_account/repository_name` (см. [load_json](https://github.com/Harpins/afisha/blob/main/README.md#python-managepy-load_json))
+- `JSON_DIR` — путь к директории с json-файлами для наполнения БД (см. [load_json](https://github.com/Harpins/afisha/blob/main/README.md#python-managepy-load_json))
 
 ## Цели проекта
 
