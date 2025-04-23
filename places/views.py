@@ -22,7 +22,7 @@ def place_details(request, pk):
     place_images = [
         f"{settings.MEDIA_URL}{place_image.image}" for place_image in place.images.all()
     ]
-    place_data = {
+    serialized_place = {
         "title": place.place_name,
         "imgs": place_images,
         "description_short": place.short_description,
@@ -30,5 +30,5 @@ def place_details(request, pk):
         "coordinates": {"lng": str(place.latitude), "lat": str(place.longitude)},
     }
     return HttpResponse(
-        json.dumps(place_data, ensure_ascii=False), content_type="application/json"
+        json.dumps(serialized_place, ensure_ascii=False), content_type="application/json"
     )

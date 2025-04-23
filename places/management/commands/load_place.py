@@ -5,7 +5,6 @@ from urllib.parse import urlparse
 from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand
 from django.db import transaction
-from django.shortcuts import get_object_or_404
 
 from places.models import Image, Place
 
@@ -16,11 +15,8 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument("json_url", type=str, help="Ссылка на JSON-файл")
 
-    def download_images(self, img_urls, place_pk):
-        location = get_object_or_404(
-            Place.objects.prefetch_related("images"), pk=place_pk
-        )
-        last_image = location.images.order_by("-ordinal").first()
+    def download_images(self, img_urls, place):
+        last_image = place.images.order_by("-ordinal").first()
         last_number = last_image.ordinal if last_image else 0
         downloaded_images = 0
         updated_images = 0
@@ -30,7 +26,7 @@ class Command(BaseCommand):
             response.raise_for_status()
             content = ContentFile(response.content, name=img_name)
             image, created = Image.objects.get_or_create(
-                location=location,
+                location=place,
                 ordinal=idx,
                 defaults={"description": img_url, "image": content},
             )
@@ -42,14 +38,12 @@ class Command(BaseCommand):
         if downloaded_images:
             self.stdout.write(
                 self.style.SUCCESS(
-                    f"{location}: добавлено {downloaded_images} изображений"
+                    f"{place}: добавлено {downloaded_images} изображений"
                 )
             )
         if updated_images:
             self.stdout.write(
-                self.style.WARNING(
-                    f"{location}: обновлено {updated_images} изображений"
-                )
+                self.style.WARNING(f"{place}: обновлено {updated_images} изображений")
             )
 
     def check_json(self, json_data):
@@ -70,8 +64,8 @@ class Command(BaseCommand):
                 response = requests.get(url, timeout=10)
                 response.raise_for_status()
                 try:
-                    json_data = response.json()
-                    if not self.check_json(json_data):
+                    place_raw = response.json()
+                    if not self.check_json(place_raw):
                         raise ValueError("Неверный формат JSON-файла")
                 except requests.exceptions.JSONDecodeError:
                     self.stdout.write(
@@ -79,11 +73,11 @@ class Command(BaseCommand):
                     )
                     raise
 
-                place_name = json_data.get("title", "")
+                place_name = place_raw.get("title", "")
                 if not place_name:
                     raise ValueError("Отсутствует название локации")
 
-                coordinates = json_data.get("coordinates", {})
+                coordinates = place_raw.get("coordinates", {})
                 if not coordinates:
                     raise ValueError("Отсутствуют координаты")
 
@@ -102,7 +96,7 @@ class Command(BaseCommand):
                 except (TypeError, ValueError) as err:
                     raise ValueError("Координаты заданы некорректно") from err
 
-                img_urls = json_data.get("imgs", [])
+                img_urls = place_raw.get("imgs", [])
                 if not img_urls:
                     raise ValueError("Отсутствуют ссылки на изображения")
 
@@ -111,13 +105,13 @@ class Command(BaseCommand):
                     defaults={
                         "latitude": lat,
                         "longitude": lng,
-                        "short_description": json_data.get("description_short", ""),
-                        "long_description": json_data.get("description_long", ""),
+                        "short_description": place_raw.get("description_short", ""),
+                        "long_description": place_raw.get("description_long", ""),
                     },
                 )
 
                 try:
-                    self.download_images(img_urls, place.pk)
+                    self.download_images(img_urls, place)
                 except Exception as err:
                     self.stdout.write(
                         self.style.ERROR(
