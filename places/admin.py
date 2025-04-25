@@ -41,7 +41,6 @@ class ImageAdmin(admin.ModelAdmin):
     ordering = ["location__place_name", "ordinal"]
     list_display = ["image_preview", "location", "ordinal"]
     readonly_fields = ["image_preview"]
-    
 
     def image_preview(self, obj):
         if obj.image:

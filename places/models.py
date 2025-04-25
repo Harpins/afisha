@@ -6,7 +6,9 @@ from tinymce.models import HTMLField
 class Place(models.Model):
     """Модель для хранения локаций"""
 
-    place_name = models.CharField(max_length=255, verbose_name="Название локации", unique=True)
+    place_name = models.CharField(
+        max_length=255, verbose_name="Название локации", unique=True
+    )
     latitude = models.DecimalField(
         verbose_name="Широта", decimal_places=14, max_digits=17
     )
@@ -51,7 +53,7 @@ class Image(models.Model):
         verbose_name="Локация",
     )
     ordinal = models.PositiveIntegerField(
-        verbose_name="Порядковый номер", db_index=True, default=1
+        verbose_name="Порядковый номер", db_index=True, null=True, blank=True
     )
     description = models.CharField(
         max_length=255, verbose_name="Описание изображения", blank=True
