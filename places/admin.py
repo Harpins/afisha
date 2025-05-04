@@ -38,11 +38,12 @@ class PlaceAdmin(SortableAdminBase, admin.ModelAdmin):
 class ImageAdmin(admin.ModelAdmin):
     list_per_page = 50
     list_select_related = ["location"]
-    search_fields = ["location__place_name", "ordinal"]
+    search_fields = ["location", "ordinal"]
     autocomplete_fields = ["location"]
-    ordering = ["location__place_name", "ordinal"]
+    ordering = ["location", "ordinal"]
     list_display = ["image_preview", "location", "ordinal"]
     readonly_fields = ["image_preview"]
+   
 
     def image_preview(self, obj):
         if obj.image:

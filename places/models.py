@@ -53,15 +53,14 @@ class Image(models.Model):
         verbose_name="Локация",
     )
     ordinal = models.PositiveIntegerField(
-        verbose_name="Порядковый номер", db_index=True, null=True, blank=True
+        verbose_name="Порядковый номер", db_index=True, default=1
     )
     description = models.CharField(
         max_length=255, verbose_name="Описание изображения", blank=True
     )
 
     class Meta:
-        ordering = ["ordinal", "location__place_name"]
-        unique_together = ["location", "ordinal"]
+        ordering = ["ordinal", "location"]
 
     def __str__(self):
         return f"{self.ordinal} {self.location}"
