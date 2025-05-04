@@ -27,9 +27,11 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "places",
     "adminsortable2",
-    "tinymce",
-    "debug_toolbar",
+    "tinymce"
 ]
+
+if DEBUG:
+    INSTALLED_APPS += ["debug_toolbar"]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
